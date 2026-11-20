@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shalam Wellness — Blog Studio</title>
+  <meta name="theme-color" content="#1a2a5e"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Shalam Studio"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="../image/Shalaam-wellness-logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css"/>
+</head>
+<body>
+
+  <!-- INSTALL PWA BANNER -->
+  <div class="pwa-install-bar" id="pwaInstallBar" hidden>
+    <span>Install <strong>Shalam Studio</strong> on your phone or desktop for quick posting.</span>
+    <div class="pwa-bar-actions">
+      <button type="button" class="btn-install" id="installPwaBtn">Install App</button>
+      <button type="button" class="btn-dismiss" id="dismissPwaBtn" aria-label="Dismiss">✕</button>
+    </div>
+  </div>
+
+  <!-- AUTH SCREEN -->
+  <section class="auth-screen" id="authScreen">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <img src="../image/Shalaam-wellness-logo.png" alt="Shalam Wellness"/>
+        <h1>Shalam <em>Studio</em></h1>
+        <p>Private Blog Publishing Dashboard</p>
+      </div>
+
+      <div class="mode-pill" id="modeBadge">Checking connection...</div>
+
+      <div class="auth-tabs" role="tablist">
+        <button type="button" class="auth-tab active" data-tab="login">Sign In</button>
+        <button type="button" class="auth-tab" data-tab="register">Create Account</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm" class="auth-form">
+        <div class="field">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="clare@shalamwellness.com" required autocomplete="email"/>
+        </div>
+        <div class="field">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password"/>
+        </div>
+        <div class="auth-error" id="loginError" hidden></div>
+        <button type="submit" class="btn-primary-full" id="loginSubmitBtn">Sign In</button>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="registerForm" class="auth-form" hidden>
+        <div class="field">
+          <label for="regName">Your Name</label>
+          <input type="text" id="regName" placeholder="Clare Wamaitha" required/>
+        </div>
+        <div class="field">
+          <label for="regEmail">Email Address</label>
+          <input type="email" id="regEmail" placeholder="clare@shalamwellness.com" required autocomplete="email"/>
+        </div>
+        <div class="field">
+          <label for="regPassword">Create Password (min. 6 characters)</label>
+          <input type="password" id="regPassword" placeholder="Choose a strong password" minlength="6" required autocomplete="new-password"/>
+        </div>
+        <div class="field" id="inviteCodeField">
+          <label for="regInviteCode">Admin Setup Code</label>
+          <input type="text" id="regInviteCode" placeholder="Code provided by your web developer"/>
+        </div>
+        <div class="auth-error" id="registerError" hidden></div>
+        <button type="submit" class="btn-primary-full" id="registerSubmitBtn">Create Admin Account</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard" hidden>
+    <header class="dash-header">
+      <div class="dash-brand">
+        <img src="../image/Shalaam-wellness-logo.png" alt="Shalam Wellness"/>
+        <div>
+          <strong>Shalam Studio</strong>
+          <span id="dashUserLabel">Signed in</span>
+        </div>
+      </div>
+      <div class="dash-actions">
+        <a href="../blog.html" target="_blank" class="btn-outline">View Live Blog ↗</a>
+        <button type="button" class="btn-outline" id="logoutBtn">Sign Out</button>
+      </div>
+    </header>
+
+    <main class="dash-main">
+      <!-- NAV TABS -->
+      <div class="dash-tabs">
+        <button type="button" class="dash-tab active" data-view="editor" id="tabEditor">✍️ Write Post</button>
+        <button type="button" class="dash-tab" data-view="posts" id="tabPosts">📚 All Posts (<span id="postCount">0</span>)</button>
+      </div>
+
+      <!-- EDITOR VIEW -->
+      <section class="dash-panel" id="editorView">
+        <div class="panel-header">
+          <h2 id="editorHeading">Create a New Blog Post</h2>
+          <button type="button" class="btn-text" id="cancelEditBtn" hidden>Cancel Editing</button>
+        </div>
+
+        <form id="postForm" class="post-form">
+          <input type="hidden" id="editingPostId"/>
+
+          <!-- COVER IMAGE UPLOAD -->
+          <div class="field">
+            <label>Cover Image</label>
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="coverFileInput" accept="image/*" hidden/>
+              <div class="upload-placeholder" id="uploadPlaceholder">
+                <span class="upload-icon">🖼️</span>
+                <strong>Tap to upload a cover photo</strong>
+                <span>JPG, PNG or WebP (stored in Cloudflare R2)</span>
+              </div>
+              <div class="upload-preview" id="uploadPreview" hidden>
+                <img id="coverPreviewImg" src="" alt="Cover preview"/>
+                <button type="button" class="btn-change-img" id="changeImgBtn">Change Image</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="postTitle">Article Title *</label>
+              <input type="text" id="postTitle" placeholder="e.g., 5 Gentle Ways to Cope with Burnout" required/>
+            </div>
+            <div class="field">
+              <label for="postCategory">Category *</label>
+              <select id="postCategory" required>
+                <option value="Trauma & Healing">Trauma &amp; Healing</option>
+                <option value="Mental Wellness">Mental Wellness</option>
+                <option value="Relationships">Relationships</option>
+                <option value="Self-Care">Self-Care</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="postExcerpt">Short Summary <span class="opt">(shown on the blog card — optional, auto-generated if left blank)</span></label>
+            <textarea id="postExcerpt" rows="2" placeholder="A 1–2 sentence preview of what readers will learn..."></textarea>
+          </div>
+
+          <!-- SIMPLE RICH TEXT EDITOR -->
+          <div class="field">
+            <label>Article Content *</label>
+            <div class="editor-toolbar" role="toolbar" aria-label="Text formatting">
+              <button type="button" data-cmd="bold" title="Bold"><strong>B</strong></button>
+              <button type="button" data-cmd="italic" title="Italic"><em>I</em></button>
+              <button type="button" data-cmd="formatBlock" data-val="h3" title="Subheading">H3</button>
+              <button type="button" data-cmd="insertUnorderedList" title="Bullet list">• List</button>
+              <button type="button" data-cmd="formatBlock" data-val="blockquote" title="Quote">“ Quote</button>
+              <button type="button" data-cmd="formatBlock" data-val="p" title="Normal text">¶ Text</button>
+            </div>
+            <div id="postEditor" class="rich-editor" contenteditable="true" data-placeholder="Start writing your article here..."></div>
+          </div>
+
+          <div class="form-status" id="publishStatus" hidden></div>
+
+          <div class="editor-footer">
+            <button type="submit" class="btn-primary-full" id="publishBtn">Publish Post to Blog</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- POSTS LIST VIEW -->
+      <section class="dash-panel" id="postsView" hidden>
+        <div class="panel-header">
+          <h2>Published Articles</h2>
+          <button type="button" class="btn-small-primary" id="newPostFromListBtn">+ New Post</button>
+        </div>
+        <div class="admin-posts-list" id="adminPostsList"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../blog-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

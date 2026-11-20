@@ -1,0 +1,7 @@
+name = "shalam-wellness-blog-api"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+[[r2_buckets]]
+binding = "BLOG_BUCKET"
+bucket_name = "shalam-wellness-blog"

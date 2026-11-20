@@ -1,0 +1,514 @@
+/* ============================================
+   SHALAM WELLNESS — book.css
+   Dedicated Multi-Step Booking Page Styles
+   ============================================ */
+
+.book-page {
+  background: var(--navy);
+  min-height: 100vh;
+}
+
+.booking-page-main {
+  position: relative;
+  padding: 128px 0 88px;
+  min-height: calc(100vh - 80px);
+  overflow: hidden;
+}
+
+.booking-page-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.9fr;
+  gap: 48px;
+  align-items: start;
+  position: relative;
+  z-index: 2;
+}
+
+.book-rates-box {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 168, 181, 0.25);
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.book-rate-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.book-rate-row strong {
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.wizard-card {
+  background: #ffffff;
+  border-radius: var(--r-lg);
+  padding: 36px;
+  box-shadow: 0 24px 60px rgba(8, 15, 40, 0.35);
+}
+
+.wizard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.wizard-top h3 {
+  margin-bottom: 4px;
+}
+
+.wizard-sub {
+  font-size: 13px;
+  color: var(--muted, #64748b);
+  margin: 0;
+}
+
+.draft-status {
+  font-size: 12px;
+  font-weight: 500;
+  color: #007d87;
+  background: rgba(0, 168, 181, 0.1);
+  padding: 5px 11px;
+  border-radius: 50px;
+  white-space: nowrap;
+}
+
+.draft-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: #effbfc;
+  border: 1px solid rgba(0, 168, 181, 0.35);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--navy);
+}
+
+.draft-banner[hidden] {
+  display: none;
+}
+
+.draft-clear-btn {
+  background: transparent;
+  border: 1px solid rgba(26, 42, 94, 0.25);
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.draft-clear-btn:hover {
+  background: rgba(26, 42, 94, 0.06);
+}
+
+/* STEPPER */
+.wizard-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.stepper-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #94a3b8;
+  transition: color 0.2s ease;
+}
+
+.stepper-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  background: #edf2f7;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.stepper-item.active {
+  color: var(--navy);
+}
+
+.stepper-item.active .stepper-num {
+  background: var(--navy);
+  color: #fff;
+}
+
+.stepper-item.completed {
+  color: #007d87;
+}
+
+.stepper-item.completed .stepper-num {
+  background: var(--teal);
+  color: #fff;
+}
+
+.stepper-line {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+  margin: 0 12px;
+}
+
+/* STEPS */
+.wizard-step {
+  display: none;
+}
+
+.wizard-step.active {
+  display: block;
+  animation: fadeStep 0.25s ease;
+}
+
+@keyframes fadeStep {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.req {
+  color: #e53e3e;
+}
+
+.step-error {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.step-error[hidden] {
+  display: none;
+}
+
+/* CONSENT BOX */
+.consent-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.consent-box h4 {
+  font-family: 'Playfair Display', serif;
+  color: var(--navy);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.consent-box p {
+  font-size: 13.5px;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+.consent-box ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #334155;
+}
+
+.consent-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #1e293b;
+  margin-bottom: 14px;
+  cursor: pointer;
+}
+
+.consent-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--teal);
+  flex-shrink: 0;
+}
+
+.inline-policy-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--teal);
+  text-decoration: underline;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+/* REVIEW CARD */
+.review-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.review-header h4 {
+  font-family: 'Playfair Display', serif;
+  color: var(--navy);
+  font-size: 18px;
+  margin: 0;
+}
+
+.review-edit-btn {
+  background: none;
+  border: none;
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.review-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+  margin: 0 0 14px;
+}
+
+.review-list-item dt {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.review-list-item dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--navy);
+  word-break: break-word;
+}
+
+.review-list-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.review-consent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #007d87;
+  background: rgba(0, 168, 181, 0.12);
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.whatsapp-info-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #166534;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
+.whatsapp-info-note svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* WIZARD BUTTONS */
+.wizard-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.wizard-actions .btn-submit {
+  width: auto;
+  flex: 1;
+  margin-top: 0;
+}
+
+.btn-wizard-back,
+.btn-save-later {
+  background: #f1f5f9;
+  color: var(--navy);
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-wizard-back:hover,
+.btn-save-later:hover {
+  background: #e2e8f0;
+}
+
+.btn-whatsapp-send {
+  background: #1ea851 !important;
+}
+
+.btn-whatsapp-send:hover {
+  background: #188c43 !important;
+}
+
+/* WHATSAPP HANDOFF */
+.whatsapp-handoff {
+  text-align: center;
+  padding: 20px 8px;
+}
+
+.whatsapp-handoff[hidden] {
+  display: none;
+}
+
+.handoff-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(37, 211, 102, 0.14);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.whatsapp-handoff h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--navy);
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.whatsapp-handoff p {
+  font-size: 14.5px;
+  color: #475569;
+  max-width: 420px;
+  margin: 0 auto 22px;
+  line-height: 1.6;
+}
+
+.handoff-btn {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  max-width: 280px;
+  margin: 0 auto 18px;
+}
+
+.handoff-secondary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.handoff-home-link {
+  font-size: 13px;
+  color: var(--teal);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* SAVE TOAST */
+.save-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--navy);
+  color: #fff;
+  border: 1px solid rgba(0, 168, 181, 0.5);
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  z-index: 9999;
+}
+
+.save-toast[hidden] {
+  display: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .booking-page-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .booking-page-main {
+    padding: 108px 0 64px;
+  }
+}
+
+@media (max-width: 560px) {
+  .wizard-card {
+    padding: 24px 18px;
+  }
+  .stepper-label {
+    display: none;
+  }
+  .wizard-actions {
+    flex-direction: column-reverse;
+  }
+  .wizard-actions button {
+    width: 100%;
+  }
+  .review-list {
+    grid-template-columns: 1fr;
+  }
+}

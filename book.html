@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book a Session — Shalam Wellness</title>
+  <meta name="description" content="Book an online or in-person counselling session with Clare Wamaitha at Shalam Wellness in Nairobi."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="book.css"/>
+</head>
+<body class="book-page">
+
+  <!-- NAVBAR -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="image/Shalaam-wellness-logo.png" alt="Shalam Wellness" class="nav-logo-img"/>
+        <span class="logo-text">Shalam <em>Wellness</em></span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#home">Home</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="index.html#process">How It Works</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <a href="index.html" class="btn btn-nav">← Back Home</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <!-- MAIN BOOKING SECTION -->
+  <main class="booking-page-main">
+    <div class="booking-glow"></div>
+    <div class="container booking-page-grid">
+
+      <!-- PRIMARY COLUMN (TOP ON MOBILE, LEFT ON DESKTOP): MULTI-STEP WIZARD -->
+      <section class="booking-form-wrap wizard-card">
+        <div class="wizard-top">
+          <div>
+            <h3>Request a Session</h3>
+            <p class="wizard-sub" id="stepSubtitle">Step 1 of 3 — Tell us about your session</p>
+          </div>
+          <span class="draft-status" id="draftStatus" aria-live="polite">Auto-save on</span>
+        </div>
+
+        <!-- RESTORED DRAFT BANNER -->
+        <div class="draft-banner" id="draftBanner" hidden>
+          <div class="draft-banner-text">
+            <strong>Welcome back!</strong> We restored your saved booking progress.
+          </div>
+          <button type="button" class="draft-clear-btn" id="clearDraftBtn">Start Fresh</button>
+        </div>
+
+        <!-- STEPPER -->
+        <div class="wizard-stepper" role="tablist" aria-label="Booking steps">
+          <div class="stepper-item active" data-step="1">
+            <span class="stepper-num">1</span>
+            <span class="stepper-label">Details</span>
+          </div>
+          <div class="stepper-line"></div>
+          <div class="stepper-item" data-step="2">
+            <span class="stepper-num">2</span>
+            <span class="stepper-label">Consent</span>
+          </div>
+          <div class="stepper-line"></div>
+          <div class="stepper-item" data-step="3">
+            <span class="stepper-num">3</span>
+            <span class="stepper-label">Review &amp; Send</span>
+          </div>
+        </div>
+
+        <form class="booking-form" id="bookingWizardForm" novalidate>
+
+          <!-- STEP 1: DETAILS -->
+          <div class="wizard-step active" id="step1">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fname">Full Name <span class="req">*</span></label>
+                <input type="text" id="fname" placeholder="Your full name" required/>
+              </div>
+              <div class="form-group">
+                <label for="fphone">Phone / WhatsApp <span class="req">*</span></label>
+                <input type="tel" id="fphone" placeholder="+254 ..." required/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="femail">Email Address <span class="optional">(optional)</span></label>
+              <input type="email" id="femail" placeholder="your@email.com"/>
+            </div>
+
+            <div class="form-group">
+              <label for="fservice">Service Type <span class="req">*</span></label>
+              <select id="fservice" required>
+                <option value="">Select a service...</option>
+                <option value="Individual Therapy">Individual Therapy</option>
+                <option value="Couples Therapy">Couples Therapy</option>
+                <option value="Personal Therapy Letter">Personal Therapy Letter</option>
+                <option value="High School Referral Report">High School Referral Report</option>
+                <option value="Wellness Coaching / Speaking">Wellness Coaching / Speaking</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Session Format <span class="req">*</span></label>
+              <div class="radio-group">
+                <label class="radio-label"><input type="radio" name="format" value="online"/> Online</label>
+                <label class="radio-label"><input type="radio" name="format" value="inperson"/> In-Person</label>
+                <label class="radio-label"><input type="radio" name="format" value="either" checked/> Either</label>
+                <label class="radio-label"><input type="radio" name="format" value="custom"/> Custom</label>
+              </div>
+              <div class="format-notice" id="formatNotice"></div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fdate">Preferred Date <span class="req">*</span></label>
+                <input type="date" id="fdate" required/>
+              </div>
+              <div class="form-group">
+                <label for="ftime">Preferred Time <span class="req">*</span></label>
+                <input type="time" id="ftime" required/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="fmessage">Brief Message <span class="optional">(optional)</span></label>
+              <textarea id="fmessage" placeholder="Anything you'd like us to know before your session..."></textarea>
+            </div>
+
+            <div class="step-error" id="step1Error" hidden></div>
+
+            <div class="wizard-actions">
+              <button type="button" class="btn-save-later" id="saveLaterBtn1">Save &amp; Finish Later</button>
+              <button type="button" class="btn-submit wizard-next" id="toStep2Btn">Continue to Consent →</button>
+            </div>
+          </div>
+
+          <!-- STEP 2: CONSENT -->
+          <div class="wizard-step" id="step2">
+            <div class="consent-box">
+              <h4>Informed Consent &amp; Confidentiality</h4>
+              <p>Before submitting your session request, please review and confirm the following:</p>
+              <ul>
+                <li><strong>Strict Confidentiality:</strong> All personal information and anything discussed in therapy is strictly confidential under the ethical guidelines of the <em>Counsellors and Psychologists Board (CPB) of Kenya</em>, except where required by law or to prevent immediate risk of harm.</li>
+                <li><strong>Session Fees:</strong> <span id="consentFeeText">Online sessions are <strong>KES 2,500</strong> and in-person sessions are <strong>KES 3,500</strong>.</span></li>
+                <li><strong>Scheduling &amp; Rescheduling:</strong> Your preferred date and time will be confirmed directly via WhatsApp within 24 hours.</li>
+              </ul>
+            </div>
+
+            <label class="consent-check">
+              <input type="checkbox" id="consentConfidentiality"/>
+              <span>I understand that my information is handled with strict confidentiality in accordance with CPB Kenya ethical standards and the Shalam Wellness <button type="button" class="inline-policy-btn" id="openPrivacy">Privacy Policy</button>.</span>
+            </label>
+
+            <label class="consent-check">
+              <input type="checkbox" id="consentFees"/>
+              <span id="consentFeeCheckboxLabel">I acknowledge the applicable session rate and consent to proceed with this booking request.</span>
+            </label>
+
+            <div class="step-error" id="step2Error" hidden></div>
+
+            <div class="wizard-actions">
+              <button type="button" class="btn-wizard-back" id="backToStep1Btn">← Back</button>
+              <button type="button" class="btn-submit wizard-next" id="toStep3Btn">Review Booking →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: REVIEW & SEND -->
+          <div class="wizard-step" id="step3">
+            <div class="review-card">
+              <div class="review-header">
+                <h4>Review Your Booking Details</h4>
+                <button type="button" class="review-edit-btn" id="editFromReviewBtn">Edit Details</button>
+              </div>
+              <dl class="review-list" id="reviewList"></dl>
+              <div class="review-consent-badge">
+                ✓ Informed Consent &amp; Confidentiality confirmed
+              </div>
+            </div>
+
+            <div class="whatsapp-info-note">
+              <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" fill="#25D366" opacity="0.18"/><path d="M11 3C6.6 3 3 6.6 3 11c0 1.5.4 2.9 1.1 4.1L3 19l4-1.1C8.1 18.6 9.5 19 11 19c4.4 0 8-3.6 8-8s-3.6-8-8-8z" stroke="#25D366" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span>Clicking <strong>Send via WhatsApp</strong> will open WhatsApp with your booking details pre-filled so you can send them directly to Clare.</span>
+            </div>
+
+            <div class="wizard-actions">
+              <button type="button" class="btn-wizard-back" id="backToStep2Btn">← Back</button>
+              <button type="submit" class="btn-submit btn-whatsapp-send" id="sendWhatsappBtn">Send via WhatsApp →</button>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- WHATSAPP HANDOFF / SUCCESS STATE -->
+        <div class="whatsapp-handoff" id="whatsappHandoff" hidden>
+          <div class="handoff-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+          </div>
+          <h3>Taking you to WhatsApp…</h3>
+          <p>Your booking message is ready for <strong>Shalam Wellness (+254 797 431 765)</strong>. If WhatsApp did not open automatically, tap the button below.</p>
+          <a href="#" id="manualWhatsappLink" target="_blank" class="btn-submit btn-whatsapp-send handoff-btn">Open WhatsApp Now →</a>
+          <div class="handoff-secondary">
+            <button type="button" class="draft-clear-btn" id="bookAnotherBtn">Book Another Session</button>
+            <a href="index.html" class="handoff-home-link">Return to Homepage</a>
+          </div>
+        </div>
+
+        <p class="privacy-note" id="wizardPrivacyNote">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#a0aec0" stroke-width="1.3"><rect x="2" y="6" width="10" height="7" rx="1"/><path d="M4 6 V4 a3 3 0 0 1 6 0 V6"/></svg>
+          Your information is 100% confidential and never shared.
+        </p>
+      </section>
+
+      <!-- SECONDARY COLUMN (BELOW FORM ON MOBILE, RIGHT ON DESKTOP): INFO & RATES -->
+      <aside class="booking-info">
+        <span class="section-label" style="color:var(--teal)">Get Started</span>
+        <h1 class="section-title" style="color:white">Book a<br/><em>Session</em></h1>
+        <p class="booking-sub">Complete the steps to prepare your booking request. Your progress is automatically saved on this device so you can continue anytime.</p>
+
+        <div class="book-rates-box">
+          <div class="book-rate-row">
+            <span>Online Session</span>
+            <strong>KES 2,500</strong>
+          </div>
+          <div class="book-rate-row">
+            <span>In-Person Session</span>
+            <strong>KES 3,500</strong>
+          </div>
+          <div class="book-rate-row">
+            <span>Speaking Engagements</span>
+            <strong>Quoted per Event</strong>
+          </div>
+        </div>
+
+        <div class="contact-cards">
+          <a href="https://wa.me/254797431765?text=Hello%20Shalam%20Wellness%2C%20I%20would%20love%20to%20book%20a%20session%20with%20you" class="contact-card" target="_blank">
+            <div class="c-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" fill="#25D366" opacity="0.15"/><path d="M11 3C6.6 3 3 6.6 3 11c0 1.5.4 2.9 1.1 4.1L3 19l4-1.1C8.1 18.6 9.5 19 11 19c4.4 0 8-3.6 8-8s-3.6-8-8-8z" stroke="#25D366" stroke-width="1.5" stroke-linecap="round"/><path d="M8.5 9.5c.3.6 1 1.8 2 2.5 1 .8 1.8 1 2.5 1.2l1-1c.3-.3.8-.3 1.1 0l1.4 1.4c.3.3.3.8 0 1.1l-.8.8" stroke="#25D366" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="c-detail">
+              <strong>WhatsApp</strong>
+              <span>+254 797 431 765</span>
+            </div>
+            <span class="c-action">Message →</span>
+          </a>
+          <a href="mailto:shalamwellness@gmail.com" class="contact-card">
+            <div class="c-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2" y="5" width="18" height="13" rx="2" stroke="#00a8b5" stroke-width="1.5"/><path d="M2 8 L11 13 L20 8" stroke="#00a8b5" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="c-detail">
+              <strong>Email</strong>
+              <span>shalamwellness@gmail.com</span>
+            </div>
+            <span class="c-action">Email →</span>
+          </a>
+          <div class="contact-card">
+            <div class="c-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2C7.7 2 5 4.7 5 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.3-2.7-6-6-6z" stroke="#00a8b5" stroke-width="1.5"/><circle cx="11" cy="8" r="2" stroke="#00a8b5" stroke-width="1.5"/></svg>
+            </div>
+            <div class="c-detail">
+              <strong>Locations</strong>
+              <span>Nairobi CBD &amp; Thika Road (Roasters)</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-bottom" style="border-top:none;">
+      <div class="container footer-bottom-inner">
+        <p>© 2026 Shalam Wellness. All rights reserved.</p>
+        <p>
+          <a href="index.html" style="color:var(--light-teal);text-decoration:none;">Home</a>
+          &nbsp;·&nbsp;
+          <a href="blog.html" style="color:var(--light-teal);text-decoration:none;">Blog</a>
+          &nbsp;·&nbsp; Designed by <a href="https://www.eventsslot.com/" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;font-weight:500;">Eventslot Technologies</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PRIVACY POLICY MODAL -->
+  <div class="privacy-overlay" id="privacyOverlay" role="dialog" aria-modal="true" aria-label="Privacy Policy">
+    <div class="privacy-modal">
+      <button class="privacy-close" id="closePrivacy" aria-label="Close Privacy Policy">✕</button>
+      <div class="privacy-header">
+        <img src="image/Shalaam-wellness-logo.png" alt="Shalam Wellness" class="privacy-logo"/>
+        <h2>Privacy Policy</h2>
+        <p class="privacy-effective">Effective: April 2026 · Compliant with the Kenya Data Protection Act, 2019</p>
+      </div>
+      <div class="privacy-body">
+        <p>Shalam Wellness ("we", "Clare Wamaitha") is committed to protecting your personal data in accordance with the <strong>Kenya Data Protection Act, 2019</strong> and the ethical guidelines of the <strong>Counsellors and Psychologists Board (CPB) of Kenya</strong>.</p>
+        <h3>1. Information We Collect</h3>
+        <p>When you prepare a booking request, we collect your name, phone/WhatsApp number, optional email, service type, session format, preferred date/time, and any optional note. We never collect payment card details on this website.</p>
+        <h3>2. Saved Booking Drafts (Local Storage)</h3>
+        <p>To prevent you from losing progress, your unfinished booking form is saved strictly on your own device's browser storage (`localStorage`). It is never sent to a server until you choose to send it, and is automatically cleared once submitted or reset.</p>
+        <h3>3. WhatsApp &amp; Third-Party Communication</h3>
+        <p>Submitting your booking opens WhatsApp with your pre-filled details so you can message Clare directly. Messages sent on WhatsApp are protected by WhatsApp's end-to-end encryption and governed by WhatsApp's privacy policy.</p>
+        <h3>4. Confidentiality &amp; Minors</h3>
+        <p>All client information is strictly confidential under CPB Kenya ethical standards and will never be shared with third parties except where required by law or to prevent immediate risk of harm. For clients under 18 (e.g., high school referrals), parent or legal guardian consent is required.</p>
+        <h3>5. Your Rights Under the Kenya Data Protection Act</h3>
+        <p>You have the right to access, correct, or request deletion of your personal data, and to withdraw consent at any time. Contact us at <a href="mailto:shalamwellness@gmail.com">shalamwellness@gmail.com</a> or <a href="tel:+254797431765">+254 797 431 765</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAVE TOAST -->
+  <div class="save-toast" id="saveToast" hidden>✓ Your progress has been saved! You can safely close this page and continue later.</div>
+
+  <script src="book.js"></script>
+</body>
+</html>

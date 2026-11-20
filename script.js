@@ -77,10 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
       formatRadios.forEach(radio => {
         radio.addEventListener('change', () => {
           if (radio.value === 'online') {
-            formatNotice.innerHTML = 'ℹ️ By choosing <strong>Online</strong>, you agree to a session rate of <strong>KES 1,500</strong>.';
+            formatNotice.innerHTML = 'ℹ️ By choosing <strong>Online</strong>, you agree to a session rate of <strong>KES 2,500</strong>.';
             formatNotice.className = 'format-notice show';
           } else if (radio.value === 'inperson') {
-            formatNotice.innerHTML = 'ℹ️ By choosing <strong>In-Person</strong>, you agree to a session rate of <strong>KES 2,500</strong>.';
+            formatNotice.innerHTML = 'ℹ️ By choosing <strong>In-Person</strong>, you agree to a session rate of <strong>KES 3,500</strong>.';
             formatNotice.className = 'format-notice show';
           } else {
             const label = radio.value === 'custom' ? 'Custom' : 'Either';

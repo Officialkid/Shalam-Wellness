@@ -478,7 +478,6 @@ section { padding: 110px 0; }
   gap: 88px;
   align-items: center;
 }
-.about-visual {}
 .about-img-wrap { position: relative; margin-bottom: 24px; }
 .about-img-frame {
   width: 100%;
@@ -515,7 +514,6 @@ section { padding: 110px 0; }
   font-weight: 400;
   letter-spacing: 0.2px;
 }
-.about-content {}
 .about-content .section-title { margin-bottom: 6px; }
 .about-subtitle {
   color: var(--mid-blue);
@@ -1649,4 +1647,102 @@ body.nav-open .nav-overlay { display: block; }
   .container { max-width: 1200px; }
   .hero-title { font-size: 76px; }
   .section-title { font-size: 52px; }
+}
+
+
+/* === SOCIAL CONNECT MARQUEE RIBBON === */
+.social-marquee {
+  background: linear-gradient(90deg, #101d44 0%, #162858 50%, #101d44 100%);
+  border-top: 1px solid rgba(0, 168, 181, 0.25);
+  border-bottom: 1px solid rgba(0, 168, 181, 0.25);
+  padding: 14px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 5;
+}
+
+.social-marquee::before,
+.social-marquee::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 64px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.social-marquee::before {
+  left: 0;
+  background: linear-gradient(to right, #101d44, transparent);
+}
+
+.social-marquee::after {
+  right: 0;
+  background: linear-gradient(to left, #101d44, transparent);
+}
+
+.social-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: socialMarqueeScroll 32s linear infinite;
+}
+
+.social-marquee:hover .social-marquee-track {
+  animation-play-state: paused;
+}
+
+.social-marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-right: 16px;
+}
+
+.sm-label {
+  color: var(--light-teal);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+.sm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 50px;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.sm-pill:hover {
+  background: rgba(0, 168, 181, 0.22);
+  border-color: var(--teal);
+  transform: translateY(-1px);
+}
+
+@keyframes socialMarqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social-marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    padding: 0 16px;
+  }
+  .social-marquee-group[aria-hidden="true"] {
+    display: none;
+  }
 }
