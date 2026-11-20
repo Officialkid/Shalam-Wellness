@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Register Service Worker for PWA installability
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+    navigator.serviceWorker.register('/blog-admin/sw.js', { scope: '/blog-admin/' }).catch(() => {});
   }
 
   // PWA Install prompt handling (visible immediately on mobile & desktop unless already installed)
