@@ -16,11 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
 
-  // PWA Install prompt handling
+  // PWA Install prompt handling (visible immediately on mobile & desktop unless already installed)
   let deferredPrompt = null;
   const pwaInstallBar = document.getElementById('pwaInstallBar');
+  const pwaInstallText = document.getElementById('pwaInstallText');
   const installPwaBtn = document.getElementById('installPwaBtn');
   const dismissPwaBtn = document.getElementById('dismissPwaBtn');
+
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+
+  if (isStandalone && pwaInstallBar) {
+    pwaInstallBar.hidden = true;
+  }
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -28,13 +36,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pwaInstallBar) pwaInstallBar.hidden = false;
   });
 
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    if (pwaInstallBar) pwaInstallBar.hidden = true;
+  });
+
   if (installPwaBtn) {
     installPwaBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      pwaInstallBar.hidden = true;
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice && choice.outcome === 'accepted') {
+          deferredPrompt = null;
+          pwaInstallBar.hidden = true;
+        }
+      } else if (isIos) {
+        if (pwaInstallText) {
+          pwaInstallText.innerHTML = 'On iPhone/iPad: tap the <strong>Share (⎋)</strong> button at the bottom of Safari, then tap <strong>Add to Home Screen</strong>.';
+        }
+        installPwaBtn.textContent = 'Got it';
+      } else {
+        if (pwaInstallText) {
+          pwaInstallText.innerHTML = 'Tap your browser menu (<strong>⋮</strong>) and select <strong>Install app</strong> or <strong>Add to Home screen</strong>.';
+        }
+        installPwaBtn.textContent = 'Got it';
+      }
     });
   }
   if (dismissPwaBtn) {
