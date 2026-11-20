@@ -46,11 +46,20 @@
       <form id="loginForm" class="auth-form">
         <div class="field">
           <label for="loginEmail">Email Address</label>
-          <input type="email" id="loginEmail" placeholder="clare@shalamwellness.com" required autocomplete="email"/>
+          <input type="email" id="loginEmail" placeholder="shalamwellness@gmail.com" required autocomplete="email"/>
         </div>
         <div class="field">
-          <label for="loginPassword">Password</label>
-          <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password"/>
+          <div class="label-row">
+            <label for="loginPassword">Password</label>
+            <button type="button" class="link-btn" id="openForgotBtn">Forgot password?</button>
+          </div>
+          <div class="password-wrap">
+            <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password"/>
+            <button type="button" class="toggle-pw-btn" data-target="loginPassword" aria-label="Show password" title="Show/Hide password">
+              <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
         </div>
         <div class="auth-error" id="loginError" hidden></div>
         <button type="submit" class="btn-primary-full" id="loginSubmitBtn">Sign In</button>
@@ -64,18 +73,51 @@
         </div>
         <div class="field">
           <label for="regEmail">Email Address</label>
-          <input type="email" id="regEmail" placeholder="clare@shalamwellness.com" required autocomplete="email"/>
+          <input type="email" id="regEmail" placeholder="shalamwellness@gmail.com" required autocomplete="email"/>
         </div>
         <div class="field">
           <label for="regPassword">Create Password (min. 6 characters)</label>
-          <input type="password" id="regPassword" placeholder="Choose a strong password" minlength="6" required autocomplete="new-password"/>
+          <div class="password-wrap">
+            <input type="password" id="regPassword" placeholder="Choose a strong password" minlength="6" required autocomplete="new-password"/>
+            <button type="button" class="toggle-pw-btn" data-target="regPassword" aria-label="Show password" title="Show/Hide password">
+              <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="field" id="inviteCodeField">
-          <label for="regInviteCode">Admin Setup Code</label>
-          <input type="text" id="regInviteCode" placeholder="Code provided by your web developer"/>
+        <div class="field">
+          <label for="regRecovery">Recovery Word <span class="opt">(used if you ever forget your password)</span></label>
+          <input type="text" id="regRecovery" placeholder="e.g., your favourite city or secret word" required/>
         </div>
         <div class="auth-error" id="registerError" hidden></div>
-        <button type="submit" class="btn-primary-full" id="registerSubmitBtn">Create Admin Account</button>
+        <button type="submit" class="btn-primary-full" id="registerSubmitBtn">Create Account</button>
+      </form>
+
+      <!-- FORGOT / RESET PASSWORD FORM -->
+      <form id="forgotForm" class="auth-form" hidden>
+        <p class="forgot-intro">Reset your password using your email and the Recovery Word you chose when creating your account.</p>
+        <div class="field">
+          <label for="resetEmail">Email Address</label>
+          <input type="email" id="resetEmail" placeholder="shalamwellness@gmail.com" required autocomplete="email"/>
+        </div>
+        <div class="field">
+          <label for="resetRecovery">Your Recovery Word</label>
+          <input type="text" id="resetRecovery" placeholder="Enter your recovery word" required/>
+        </div>
+        <div class="field">
+          <label for="resetPassword">New Password (min. 6 characters)</label>
+          <div class="password-wrap">
+            <input type="password" id="resetPassword" placeholder="Enter a new password" minlength="6" required autocomplete="new-password"/>
+            <button type="button" class="toggle-pw-btn" data-target="resetPassword" aria-label="Show password" title="Show/Hide password">
+              <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="auth-error" id="resetError" hidden></div>
+        <div class="auth-success" id="resetSuccess" hidden></div>
+        <button type="submit" class="btn-primary-full" id="resetSubmitBtn">Reset Password</button>
+        <button type="button" class="back-login-btn" id="backToLoginBtn">← Back to Sign In</button>
       </form>
     </div>
   </section>

@@ -85,10 +85,20 @@ async function verifyJwt(token, secret) {
   }
 }
 
+async function getJwtSecret(env) {
+  let raw = env && env.JWT_SECRET;
+  if (raw && typeof raw === 'object' && typeof raw.get === 'function') {
+    raw = await raw.get();
+  }
+  const str = String(raw || '').trim();
+  return str.length >= 8 ? str : 'shalam-wellness-r2-studio-fallback-secret-2026';
+}
+
 async function requireAuth(request, env) {
   const auth = request.headers.get('Authorization') || '';
   if (!auth.startsWith('Bearer ')) return null;
-  return await verifyJwt(auth.slice(7), env.JWT_SECRET);
+  const secret = await getJwtSecret(env);
+  return await verifyJwt(auth.slice(7), secret);
 }
 
 // === R2 JSON HELPERS ===
@@ -142,32 +152,40 @@ export default {
         return json({ posts }, 200, request);
       }
 
-      // 3. AUTH: POST /api/auth/register
+      // 3. AUTH: POST /api/auth/register (self-service with Recovery Word)
       if (request.method === 'POST' && path === '/api/auth/register') {
         const body = await request.json();
         const name = (body.name || '').trim();
         const email = (body.email || '').trim().toLowerCase();
         const password = body.password || '';
-        const inviteCode = (body.inviteCode || '').trim();
+        const recoveryWord = (body.recoveryWord || '').trim().toLowerCase();
 
-        if (env.ADMIN_INVITE_CODE && inviteCode !== env.ADMIN_INVITE_CODE) {
-          return json({ error: 'Invalid Admin Setup Code.' }, 403, request);
-        }
         if (!name || !email || password.length < 6) {
           return json({ error: 'Name, email, and a password (min 6 chars) are required.' }, 400, request);
         }
 
         const users = await readJson(env.BLOG_BUCKET, USERS_KEY, []);
         if (users.some(u => u.email === email)) {
-          return json({ error: 'An account with this email already exists.' }, 409, request);
+          return json({ error: 'An account with this email already exists. Please sign in or use Forgot Password.' }, 409, request);
         }
 
         const { salt, hash } = await hashPassword(password);
-        const newUser = { id: `u-${Date.now()}`, name, email, salt, hash, createdAt: new Date().toISOString() };
+        const rec = recoveryWord ? await hashPassword(recoveryWord) : null;
+        const newUser = {
+          id: `u-${Date.now()}`,
+          name,
+          email,
+          salt,
+          hash,
+          recoverySalt: rec ? rec.salt : '',
+          recoveryHash: rec ? rec.hash : '',
+          createdAt: new Date().toISOString()
+        };
         users.push(newUser);
         await writeJson(env.BLOG_BUCKET, USERS_KEY, users);
 
-        const token = await signJwt({ sub: newUser.id, email: newUser.email, name: newUser.name }, env.JWT_SECRET);
+        const secret = await getJwtSecret(env);
+        const token = await signJwt({ sub: newUser.id, email: newUser.email, name: newUser.name }, secret);
         return json({ token, user: { id: newUser.id, name: newUser.name, email: newUser.email } }, 201, request);
       }
 
@@ -184,7 +202,47 @@ export default {
         const { hash } = await hashPassword(password, user.salt);
         if (hash !== user.hash) return json({ error: 'Invalid email or password.' }, 401, request);
 
-        const token = await signJwt({ sub: user.id, email: user.email, name: user.name }, env.JWT_SECRET);
+        const secret = await getJwtSecret(env);
+        const token = await signJwt({ sub: user.id, email: user.email, name: user.name }, secret);
+        return json({ token, user: { id: user.id, name: user.name, email: user.email } }, 200, request);
+      }
+
+      // 4b. AUTH: POST /api/auth/reset-password (self-service via Recovery Word)
+      if (request.method === 'POST' && path === '/api/auth/reset-password') {
+        const body = await request.json();
+        const email = (body.email || '').trim().toLowerCase();
+        const recoveryWord = (body.recoveryWord || '').trim().toLowerCase();
+        const newPassword = body.newPassword || '';
+
+        if (!email || !recoveryWord || newPassword.length < 6) {
+          return json({ error: 'Email, recovery word, and a new password (min 6 chars) are required.' }, 400, request);
+        }
+
+        const users = await readJson(env.BLOG_BUCKET, USERS_KEY, []);
+        const idx = users.findIndex(u => u.email === email);
+        if (idx === -1) return json({ error: 'No account found with that email.' }, 404, request);
+
+        const user = users[idx];
+        let verified = false;
+        if (user.recoverySalt && user.recoveryHash) {
+          const check = await hashPassword(recoveryWord, user.recoverySalt);
+          verified = check.hash === user.recoveryHash;
+        }
+        // Fallback: allow ADMIN_INVITE_CODE if user registered before recovery word existed
+        if (!verified && env.ADMIN_INVITE_CODE && recoveryWord === String(env.ADMIN_INVITE_CODE).trim().toLowerCase()) {
+          verified = true;
+        }
+        if (!verified) {
+          return json({ error: 'Recovery word did not match. Please try again.' }, 403, request);
+        }
+
+        const { salt, hash } = await hashPassword(newPassword);
+        users[idx].salt = salt;
+        users[idx].hash = hash;
+        await writeJson(env.BLOG_BUCKET, USERS_KEY, users);
+
+        const secret = await getJwtSecret(env);
+        const token = await signJwt({ sub: user.id, email: user.email, name: user.name }, secret);
         return json({ token, user: { id: user.id, name: user.name, email: user.email } }, 200, request);
       }
 

@@ -71,12 +71,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const authScreen = document.getElementById('authScreen');
   const dashboard = document.getElementById('dashboard');
   const modeBadge = document.getElementById('modeBadge');
-  const inviteCodeField = document.getElementById('inviteCodeField');
+  const authTabsWrap = document.querySelector('.auth-tabs');
   const authTabs = document.querySelectorAll('.auth-tab');
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
+  const forgotForm = document.getElementById('forgotForm');
+  const openForgotBtn = document.getElementById('openForgotBtn');
+  const backToLoginBtn = document.getElementById('backToLoginBtn');
   const loginError = document.getElementById('loginError');
   const registerError = document.getElementById('registerError');
+  const resetError = document.getElementById('resetError');
+  const resetSuccess = document.getElementById('resetSuccess');
   const dashUserLabel = document.getElementById('dashUserLabel');
   const logoutBtn = document.getElementById('logoutBtn');
 
@@ -113,23 +118,44 @@ document.addEventListener('DOMContentLoaded', () => {
       ? '☁️ Connected to Cloudflare R2 Storage'
       : '🧪 Local Preview Mode (connect Cloudflare Worker in blog-config.js to go live)';
   }
-  if (!IS_LIVE && inviteCodeField) {
-    // In local preview mode, invite code is optional
-    inviteCodeField.querySelector('label').textContent = 'Admin Setup Code (optional in local preview)';
-  }
 
-  // Auth tabs
-  authTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      authTabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const isLogin = tab.dataset.tab === 'login';
-      loginForm.hidden = !isLogin;
-      registerForm.hidden = isLogin;
-      loginError.hidden = true;
-      registerError.hidden = true;
+  // Show / Hide Password eye toggle buttons
+  document.querySelectorAll('.toggle-pw-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById(btn.dataset.target);
+      if (!input) return;
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      const eyeOpen = btn.querySelector('.eye-open');
+      const eyeClosed = btn.querySelector('.eye-closed');
+      if (eyeOpen) eyeOpen.hidden = isHidden;
+      if (eyeClosed) eyeClosed.hidden = !isHidden;
+      btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
     });
   });
+
+  // Auth tabs & Forgot Password switching
+  function showAuthForm(mode) {
+    loginForm.hidden = mode !== 'login';
+    registerForm.hidden = mode !== 'register';
+    forgotForm.hidden = mode !== 'forgot';
+    if (authTabsWrap) authTabsWrap.hidden = mode === 'forgot';
+    loginError.hidden = true;
+    registerError.hidden = true;
+    resetError.hidden = true;
+    resetSuccess.hidden = true;
+    authTabs.forEach(t => t.classList.toggle('active', t.dataset.tab === mode));
+  }
+
+  authTabs.forEach(tab => {
+    tab.addEventListener('click', () => showAuthForm(tab.dataset.tab));
+  });
+  if (openForgotBtn) {
+    openForgotBtn.addEventListener('click', () => showAuthForm('forgot'));
+  }
+  if (backToLoginBtn) {
+    backToLoginBtn.addEventListener('click', () => showAuthForm('login'));
+  }
 
   // Helper: slugify
   function slugify(text) {
@@ -188,17 +214,17 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem(LOCAL_POSTS_KEY, JSON.stringify(posts));
   }
 
-  // Register
+  // Register (self-service — Name, Email, Password, Recovery Word)
   registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     registerError.hidden = true;
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim().toLowerCase();
     const password = document.getElementById('regPassword').value;
-    const inviteCode = document.getElementById('regInviteCode').value.trim();
+    const recoveryWord = document.getElementById('regRecovery').value.trim().toLowerCase();
 
-    if (!name || !email || password.length < 6) {
-      registerError.textContent = 'Please fill in your name, email, and a password of at least 6 characters.';
+    if (!name || !email || password.length < 6 || !recoveryWord) {
+      registerError.textContent = 'Please fill in your name, email, a password (min. 6 characters), and a recovery word.';
       registerError.hidden = false;
       return;
     }
@@ -212,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch(`${CFG.API_BASE_URL}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, inviteCode })
+          body: JSON.stringify({ name, email, password, recoveryWord })
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Could not create account.');
@@ -222,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (users.some(u => u.email === email)) {
           throw new Error('An account with this email already exists. Please sign in.');
         }
-        const user = { id: `u-${Date.now()}`, name, email, password };
+        const user = { id: `u-${Date.now()}`, name, email, password, recoveryWord };
         users.push(user);
         localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
         setSession(`local-token-${Date.now()}`, { name, email });
@@ -233,9 +259,60 @@ document.addEventListener('DOMContentLoaded', () => {
       registerError.hidden = false;
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Create Admin Account';
+      btn.textContent = 'Create Account';
     }
   });
+
+  // Forgot / Reset Password
+  if (forgotForm) {
+    forgotForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      resetError.hidden = true;
+      resetSuccess.hidden = true;
+      const email = document.getElementById('resetEmail').value.trim().toLowerCase();
+      const recoveryWord = document.getElementById('resetRecovery').value.trim().toLowerCase();
+      const newPassword = document.getElementById('resetPassword').value;
+
+      if (!email || !recoveryWord || newPassword.length < 6) {
+        resetError.textContent = 'Please enter your email, recovery word, and a new password (min. 6 characters).';
+        resetError.hidden = false;
+        return;
+      }
+
+      const btn = document.getElementById('resetSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Resetting password...';
+
+      try {
+        if (IS_LIVE) {
+          const res = await fetch(`${CFG.API_BASE_URL}/api/auth/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, recoveryWord, newPassword })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Could not reset password.');
+          setSession(data.token, data.user);
+          enterDashboard();
+        } else {
+          const users = getLocalUsers();
+          const idx = users.findIndex(u => u.email === email && (u.recoveryWord || '').toLowerCase() === recoveryWord);
+          if (idx === -1) throw new Error('Email or recovery word did not match.');
+          users[idx].password = newPassword;
+          localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
+          resetSuccess.textContent = '✓ Password updated! You can now sign in with your new password.';
+          resetSuccess.hidden = false;
+          forgotForm.reset();
+        }
+      } catch (err) {
+        resetError.textContent = err.message;
+        resetError.hidden = false;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Reset Password';
+      }
+    });
+  }
 
   // Login
   loginForm.addEventListener('submit', async (e) => {
