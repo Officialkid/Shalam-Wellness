@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /blog-admin/
+Disallow: /blog-admin
+Disallow: /cloudflare-worker/
+
+Sitemap: https://www.shalamwellness.co.ke/sitemap.xml

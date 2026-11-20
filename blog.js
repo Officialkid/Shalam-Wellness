@@ -226,6 +226,37 @@ document.addEventListener('DOMContentLoaded', () => {
       const pageUrl = encodeURIComponent(window.location.href);
       const shareText = encodeURIComponent(`${post.title} — Shalam Wellness`);
 
+      // Dynamic SEO metadata + BlogPosting JSON-LD
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && post.excerpt) metaDesc.setAttribute('content', post.excerpt);
+      let canon = document.querySelector('link[rel="canonical"]');
+      if (!canon) {
+        canon = document.createElement('link');
+        canon.rel = 'canonical';
+        document.head.appendChild(canon);
+      }
+      canon.href = `https://www.shalamwellness.co.ke/post.html?slug=${encodeURIComponent(post.slug || post.id)}`;
+
+      const ld = document.createElement('script');
+      ld.type = 'application/ld+json';
+      ld.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: post.title,
+        description: post.excerpt || '',
+        image: img.startsWith('http') ? img : `https://www.shalamwellness.co.ke/${img.replace(/^\//, '')}`,
+        datePublished: post.createdAt || undefined,
+        dateModified: post.updatedAt || post.createdAt || undefined,
+        author: { '@type': 'Person', name: post.author || 'Clare Wamaitha', url: 'https://www.shalamwellness.co.ke/about.html' },
+        publisher: {
+          '@type': 'Organization',
+          name: 'Shalam Wellness',
+          logo: { '@type': 'ImageObject', url: 'https://www.shalamwellness.co.ke/image/logo-web.png' }
+        },
+        mainEntityOfPage: canon.href
+      });
+      document.head.appendChild(ld);
+
       postContentArea.innerHTML = `
         <header class="post-header">
           <span class="post-category-badge">${escapeHtml(post.category || 'Mental Wellness')}</span>

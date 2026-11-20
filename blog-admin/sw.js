@@ -1,7 +1,7 @@
 /* ============================================
    SHALAM WELLNESS STUDIO — Service Worker (PWA)
    ============================================ */
-const CACHE_NAME = 'shalam-blog-studio-v2';
+const CACHE_NAME = 'shalam-blog-studio-v3';
 const ASSETS = [
   '/blog-admin/',
   '/blog-admin/index.html',
@@ -9,7 +9,7 @@ const ASSETS = [
   '/blog-admin/admin.js',
   '/blog-admin/manifest.json',
   '/blog-config.js',
-  '/image/Shalaam-wellness-logo.png'
+  '/image/logo-web.png'
 ];
 
 self.addEventListener('install', (event) => {
